@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Students</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+   <link rel="stylesheet" href="/styles/display.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <header>
+            <h1>All Students</h1>
+            <p class="subtitle">View and manage all student records</p>
+            <div class="header-decoration"></div>
+        </header>
+
+        <div class="controls">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search by name or roll number...">
+            </div>
+            <a href="/" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+
+        <% if (result && result.rows && result.rows.length > 0) { %>
+            <table class="students-table" id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th data-sort="roll">Roll No. <i class="fas fa-sort"></i></th>
+                        <th data-sort="name">Name <i class="fas fa-sort"></i></th>
+                        <th data-sort="percentage">Percentage <i class="fas fa-sort"></i></th>
+                        <th>Grade</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% result.rows.forEach(student => { %>
+                        <tr>
+                            <td class="photo-cell">
+                                <% if (student.photo_path) { %>
+                                    <div class="student-table-photo">
+                                        <img src="<%= student.photo_path %>" alt="<%= student.name %>'s photo">
+                                    </div>
+                                <% } else { %>
+                                    <div class="student-table-photo no-img">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                <% } %>
+                            </td>
+                            <td><%= student.roll %></td>
+                            <td><%= student.name %></td>
+                            <td class="percentage-cell">
+                                <span class="percentage-text"><%= student.percentage %>%</span>
+                            </td>
+                            <td>
+                                <% 
+                                    let gradeClass = '';
+                                    let gradeLetter = '';
+                                    
+                                    if (student.percentage >= 90) {
+                                        gradeClass = 'grade-a-plus';
+                                        gradeLetter = 'A+';
+                                    } else if (student.percentage >= 80) {
+                                        gradeClass = 'grade-a';
+                                        gradeLetter = 'A';
+                                    } else if (student.percentage >= 70) {
+                                        gradeClass = 'grade-b';
+                                        gradeLetter = 'B';
+                                    } else if (student.percentage >= 60) {
+                                        gradeClass = 'grade-c';
+                                        gradeLetter = 'C';
+                                    } else {
+                                        gradeClass = 'grade-f';
+                                        gradeLetter = 'F';
+                                    }
+                                %>
+                                <span class="grade-badge <%= gradeClass %>"><%= gradeLetter %></span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <form action="/show" method="POST" style="display: inline;">
+                                        <input type="hidden" name="roll" value="<%= student.roll %>">
+                                        <button type="submit" class="action-btn view-btn" title="View Student">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </form>
+                                    <button class="action-btn edit-btn" title="Edit Student" 
+                                            onclick="prefillUpdateForm('<%= student.roll %>', '<%= student.name %>', '<%= student.percentage %>')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <form action="/delete" method="POST" style="display: inline;" 
+                                          onsubmit="return confirm('Are you sure you want to delete student with roll number <%= student.roll %>?')">
+                                        <input type="hidden" name="deleteRoll" value="<%= student.roll %>">
+                                        <button type="submit" class="action-btn delete-btn" title="Delete Student">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <div class="no-students">
+                <h2>No students found</h2>
+                <p>There are no student records in the database. Add some students to see them here.</p>
+            </div>
+        <% } %>
+
+        <footer>
+            <p>© <%= new Date().getFullYear() %> Student Information System | Designed for better education management</p>
+        </footer>
+    </div>
+
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const searchValue = this.value.toLowerCase();
+            const table = document.getElementById('studentsTable');
+            if (!table) return;
+            
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const name = rows[i].getElementsByTagName('td')[2].textContent.toLowerCase();
+                const roll = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+                
+                if (name.includes(searchValue) || roll.includes(searchValue)) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        });
+
+        // Sorting functionality
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', function() {
+                const table = document.getElementById('studentsTable');
+                const tbody = table.getElementsByTagName('tbody')[0];
+                const rows = Array.from(tbody.getElementsByTagName('tr'));
+                
+                const sortBy = this.getAttribute('data-sort');
+                const isAscending = this.classList.contains('asc');
+                
+                // Reset all headers
+                document.querySelectorAll('th[data-sort]').forEach(header => {
+                    header.classList.remove('asc', 'desc');
+                    header.querySelector('i').className = 'fas fa-sort';
+                });
+                
+                // Set current header
+                this.classList.add(isAscending ? 'desc' : 'asc');
+                this.querySelector('i').className = isAscending ? 'fas fa-sort-down' : 'fas fa-sort-up';
+                
+                // Sort rows
+                rows.sort((a, b) => {
+                    let aValue, bValue;
+                    
+                    if (sortBy === 'roll') {
+                        aValue = a.cells[1].textContent.trim(); // Offset by 1 because of photo column
+                        bValue = b.cells[1].textContent.trim();
+                    } else if (sortBy === 'name') {
+                        aValue = a.cells[2].textContent.trim(); // Offset by 1 because of photo column
+                        bValue = b.cells[2].textContent.trim();
+                    } else if (sortBy === 'percentage') {
+                        aValue = parseFloat(a.cells[3].textContent); // Offset by 1 because of photo column
+                        bValue = parseFloat(b.cells[3].textContent);
+                    }
+                    
+                    if (isAscending) {
+                        return aValue > bValue ? -1 : 1;
+                    } else {
+                        return aValue < bValue ? -1 : 1;
+                    }
+                });
+                
+                // Reorder rows
+                rows.forEach(row => tbody.appendChild(row));
+            });
+        });
+
+        // Function to prefill update form
+        function prefillUpdateForm(roll, name, percentage) {
+            // Scroll to update form
+            window.location.href = '/#updateForm';
+            
+            // Fill the form
+            setTimeout(() => {
+                document.querySelector('#updateForm #roll').value = roll;
+                document.querySelector('#updateForm #updateRoll').value = roll;
+                document.querySelector('#updateForm #updateName').value = name;
+                document.querySelector('#updateForm #updatePercentage').value = percentage;
+                
+                // Highlight the form
+                const updateCard = document.querySelector('#updateForm').closest('.card');
+                updateCard.style.boxShadow = '0 0 0 3px rgba(108, 92, 231, 0.3)';
+                setTimeout(() => {
+                    updateCard.style.boxShadow = '';
+                }, 2000);
+            }, 500);
+        }
+    </script>
+</body>
+</html> 

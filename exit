@@ -1,0 +1,11 @@
+[33mcommit aff6d4a0b8a280a7e432fe5b2a2342ea776f9560[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Shivam Srivastava <srivastavshivam549@gmail.com>
+Date:   Thu Apr 3 02:07:21 2025 +0530
+
+    Resolve issue with photo not displaying in student profiles and update README.md file
+
+[33mcommit aa8039a5893771410d935388d3596b393d751ca1[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: Shivam Srivastava <srivastavshivam549@gmail.com>
+Date:   Mon Mar 31 23:37:01 2025 +0530
+
+    Initial commint

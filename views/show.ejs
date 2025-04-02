@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/styles/show.css">
+   
+</head>
+<body>
+    <div class="page-wrapper">
+        <header>
+            <h1>Student Details</h1>
+            <div class="header-decoration"></div>
+        </header>
+
+        <% if (result && result.rows && result.rows.length > 0) { %>
+            <div class="student-card">
+                <div class="student-photo">
+                    <% if (result.rows[0].photo_path) { %>
+                        <img src="<%= result.rows[0].photo_path %>" alt="<%= result.rows[0].name %>'s photo">
+                    <% } else { %>
+                        <div class="no-photo">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    <% } %>
+                </div>
+                <div class="student-info">
+                    <div class="info-label">Name:</div>
+                    <div class="info-value"><%= result.rows[0].name %></div>
+                    
+                    <div class="info-label">Roll Number:</div>
+                    <div class="info-value"><%= result.rows[0].roll %></div>
+                </div>
+                
+                <div class="student-percentage">
+                    <div class="info-label">Percentage:</div>
+                    <div class="info-value"><%= result.rows[0].percentage %>%</div>
+                    <div class="percentage-bar">
+                        <div class="percentage-fill" data-width="<%= result.rows[0].percentage %>"></div>
+                    </div>
+                    
+                    <% 
+                        let gradeClass = '';
+                        let gradeLetter = '';
+                        
+                        if (result.rows[0].percentage >= 90) {
+                            gradeClass = 'grade-a';
+                            gradeLetter = 'A+';
+                        } else if (result.rows[0].percentage >= 80) {
+                            gradeClass = 'grade-a';
+                            gradeLetter = 'A';
+                        } else if (result.rows[0].percentage >= 70) {
+                            gradeClass = 'grade-b';
+                            gradeLetter = 'B';
+                        } else if (result.rows[0].percentage >= 60) {
+                            gradeClass = 'grade-c';
+                            gradeLetter = 'C';
+                        } else {
+                            gradeClass = 'grade-f';
+                            gradeLetter = 'F';
+                        }
+                    %>
+                    
+                    <div class="grade <%= gradeClass %>">
+                        Grade: <%= gradeLetter %>
+                    </div>
+                </div>
+            </div>
+        <% } else { %>
+            <div class="no-student">
+                <h2>No student found with this roll number</h2>
+                <p>Please check the roll number and try again.</p>
+            </div>
+        <% } %>
+        
+        <div class="buttons">
+            <a href="/" class="btn btn-primary">Back to Home</a>
+        </div>
+
+        <footer>
+            <p>© <%= new Date().getFullYear() %> Student Information System | Designed for better education management</p>
+        </footer>
+    </div>
+
+    <script>
+        // Animation for percentage bar on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const percentageFills = document.querySelectorAll('.percentage-fill');
+            percentageFills.forEach(fill => {
+                const width = fill.getAttribute('data-width') + '%';
+                fill.style.width = '0';
+                setTimeout(() => {
+                    fill.style.width = width;
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>

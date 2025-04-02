@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Information System</title>
+   <link rel="stylesheet" href="/styles/form.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <!-- Star field background -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Gradient overlay -->
+    <div class="gradient-overlay"></div>
+    
+    <!-- Floating bubble elements -->
+    <div class="floating-bubble bubble-1"></div>
+    <div class="floating-bubble bubble-2"></div>
+    <div class="floating-bubble bubble-3"></div>
+    
+    <div class="page-wrapper">
+        <header>
+            <div class="theme-toggle">
+                <button id="themeToggle" class="theme-btn">
+                    <i class="fas fa-moon"></i>
+                    <span>Dark Mode</span>
+                </button>
+            </div>
+            <h1>Stellar Student Hub</h1>
+            <p class="subtitle">Elevate your academic management experience with our intuitive platform. Effortlessly organize, track, and optimize student information with powerful tools designed for modern education.</p>
+            <div class="header-decoration"></div>
+        </header>
+        
+        <div class="container">
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="card-title"><i class="fas fa-user-plus"></i> Enroll New Scholar</h3>
+                    <div id="addAlert" class="alert alert-success">Student added successfully!</div>
+                    <form action="/submit" method="POST" id="addForm" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="name">Full Name:</label>
+                            <input type="text" id="name" name="name" placeholder="Enter student's full name" required pattern="[A-Za-z ]{2,50}" title="Name should only contain letters and spaces (2-50 characters)">
+                            <div class="tooltip">Name should only contain letters and spaces</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="roll">Roll Number:</label>
+                            <input type="text" id="roll" name="roll" placeholder="Enter unique roll number" required pattern="[A-Za-z0-9-]{2,20}" title="Roll number should be 2-20 characters (letters, numbers, and hyphens only)">
+                            <div class="tooltip">Roll number should be 2-20 characters (letters, numbers, and hyphens only)</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="percentage">Academic Score (%):</label>
+                            <input type="number" id="percentage" name="percentage" min="0" max="100" step="0.01" placeholder="Enter percentage score" required>
+                            <div class="tooltip">Score must be between 0 and 100</div>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Register Student</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="card-title"><i class="fas fa-search"></i> Locate Student Profile</h3>
+                    <div id="findAlert" class="alert alert-success">Student found!</div>
+                    <form action="/show" method="POST" id="findForm">
+                        <div class="form-group">
+                            <label for="showRoll">Student ID Number:</label>
+                            <input type="text" id="showRoll" name="roll" placeholder="Enter student roll number" required pattern="[A-Za-z0-9-]{2,20}" title="Roll number should be 2-20 characters (letters, numbers, and hyphens only)">
+                            <div class="tooltip">Enter a valid roll number</div>
+                        </div>
+                        
+                        <button type="submit" class="show-btn">View Details</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="card-title"><i class="fas fa-edit"></i> Modify Scholar Records</h3>
+                    <div id="updateAlert" class="alert alert-success">Student updated successfully!</div>
+                    <form action="/update" method="POST" id="updateForm">
+                        <div class="form-group">
+                            <label for="roll">Current Roll Number:</label>
+                            <input type="text" id="roll" name="roll" placeholder="Enter existing roll number" required pattern="[A-Za-z0-9-]{2,20}" title="Roll number should be 2-20 characters (letters, numbers, and hyphens only)">
+                            <div class="tooltip">Enter a valid roll number</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="updateRoll">New Roll Number:</label>
+                            <input type="text" id="updateRoll" name="updateRoll" placeholder="Enter updated roll number" required pattern="[A-Za-z0-9-]{2,20}" title="Roll number should be 2-20 characters (letters, numbers, and hyphens only)">
+                            <div class="tooltip">Roll number should be 2-20 characters (letters, numbers, and hyphens only)</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="updateName">Updated Name:</label>
+                            <input type="text" id="updateName" name="updateName" placeholder="Enter student's updated name" required pattern="[A-Za-z ]{2,50}" title="Name should only contain letters and spaces (2-50 characters)">
+                            <div class="tooltip">Name should only contain letters and spaces</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="updatePercentage">Updated Score (%):</label>
+                            <input type="number" id="updatePercentage" name="updatePercentage" min="0" max="100" step="0.01" placeholder="Enter updated percentage" required>
+                            <div class="tooltip">Score must be between 0 and 100</div>
+                        </div>
+                        
+                        <button type="submit" class="update-btn">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="card-title"><i class="fas fa-trash-alt"></i> Remove Student Record</h3>
+                    <div id="deleteAlert" class="alert alert-success">Student deleted successfully!</div>
+                    <form action="/delete" method="POST" id="deleteForm">
+                        <div class="form-group">
+                            <label for="deleteRoll">Student Roll Number:</label>
+                            <input type="text" id="deleteRoll" name="deleteRoll" placeholder="Enter roll number to remove" required pattern="[A-Za-z0-9-]{2,20}" title="Roll number should be 2-20 characters (letters, numbers, and hyphens only)">
+                            <div class="tooltip">Enter a valid roll number</div>
+                        </div>
+                        
+                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to permanently delete this student record?')">Delete Record</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="card-title"><i class="fas fa-list"></i> View All Scholars</h3>
+                    <div id="displayAlert" class="alert alert-success">Displaying all student records</div>
+                    <form action="/display" method="GET" id="displayForm">
+                        <button type="submit" class="display-btn">Show Complete Database</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- New card for photo upload -->
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="card-title"><i class="fas fa-camera"></i> Upload Student Photo</h3>
+                    <div id="photoAlert" class="alert alert-success">Photo uploaded successfully!</div>
+                    <form action="/upload-photo" method="POST" id="photoForm" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="photoRoll">Student Roll Number:</label>
+                            <input type="text" id="photoRoll" name="roll" placeholder="Enter student roll number" required pattern="[A-Za-z0-9-]{2,20}" title="Roll number should be 2-20 characters (letters, numbers, and hyphens only)">
+                            <div class="tooltip">Enter a valid roll number</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="studentPhoto">Student Photo:</label>
+                            <div class="file-upload-wrapper">
+                                <input type="file" id="studentPhoto" name="studentPhoto" accept="image/*" required>
+                                <div class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>Choose a photo</span>
+                                </div>
+                                <div class="file-preview"></div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="photo-btn">Upload Photo</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2023 Stellar Student Hub | Crafted with <i class="fas fa-heart" style="color: #ff6b95;"></i> for the future of education</p>
+        </footer>
+    </div>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Handle form submissions and show alerts
+        function showAlert(alertId, success = true) {
+            const alert = document.getElementById(alertId);
+            alert.style.display = 'block';
+            alert.className = `alert ${success ? 'alert-success' : 'alert-error'}`;
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+
+        // Add loading state to buttons during form submission
+        function handleFormSubmit(form, alertId) {
+            const button = form.querySelector('button[type="submit"]');
+            
+            button.classList.add('loading');
+            
+            // Simulate delay for demonstration (remove in production)
+            setTimeout(() => {
+                if (form.checkValidity()) {
+                    showAlert(alertId, true);
+                } else {
+                    showAlert(alertId, false);
+                }
+                button.classList.remove('loading');
+            }, 800);
+            
+            return form.checkValidity();
+        }
+
+        // Setup form handlers
+        document.getElementById('addForm').addEventListener('submit', function(e) {
+            return handleFormSubmit(this, 'addAlert');
+        });
+
+        document.getElementById('findForm').addEventListener('submit', function(e) {
+            return handleFormSubmit(this, 'findAlert');
+        });
+
+        document.getElementById('updateForm').addEventListener('submit', function(e) {
+            return handleFormSubmit(this, 'updateAlert');
+        });
+
+        document.getElementById('deleteForm').addEventListener('submit', function(e) {
+            if (confirm('Are you sure you want to permanently delete this student record?')) {
+                return handleFormSubmit(this, 'deleteAlert');
+            } else {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        document.getElementById('displayForm').addEventListener('submit', function(e) {
+            return handleFormSubmit(this, 'displayAlert');
+        });
+        
+        // Add custom validation for forms
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('invalid', function() {
+                const tooltip = this.nextElementSibling;
+                if (tooltip && tooltip.classList.contains('tooltip')) {
+                    tooltip.textContent = this.title || 'Please enter a valid value';
+                    tooltip.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        tooltip.style.display = 'none';
+                    }, 3000);
+                }
+            });
+            
+            input.addEventListener('input', function() {
+                const tooltip = this.nextElementSibling;
+                if (tooltip && tooltip.classList.contains('tooltip')) {
+                    tooltip.style.display = 'none';
+                }
+            });
+        });
+        
+        // Create stars for the background
+        function createStars() {
+            const stars = document.getElementById('stars');
+            const count = 150;
+            
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                // Random size
+                const size = Math.random() * 2;
+                
+                // Random animation duration and delay
+                const duration = 3 + Math.random() * 5;
+                const delay = Math.random() * 5;
+                
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.setProperty('--duration', `${duration}s`);
+                star.style.setProperty('--delay', `${delay}s`);
+                
+                stars.appendChild(star);
+            }
+        }
+        
+        // Initialize stars on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            
+            // Check if user has a saved preference
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            
+            // Apply saved preference
+            if (darkMode) {
+                body.classList.add('dark-theme');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>Light Mode</span>';
+            }
+            
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-theme');
+                const isDark = body.classList.contains('dark-theme');
+                
+                if (isDark) {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>Light Mode</span>';
+                } else {
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i><span>Dark Mode</span>';
+                }
+                
+                // Save preference
+                localStorage.setItem('darkMode', isDark);
+            });
+            
+            // File upload preview
+            const fileInput = document.getElementById('studentPhoto');
+            if (fileInput) {
+                fileInput.addEventListener('change', function() {
+                    const filePreview = this.parentElement.querySelector('.file-preview');
+                    const fileLabel = this.parentElement.querySelector('.file-upload-label span');
+                    
+                    if (this.files && this.files[0]) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            filePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                            fileLabel.textContent = fileInput.files[0].name;
+                        }
+                        
+                        reader.readAsDataURL(this.files[0]);
+                    }
+                });
+            }
+            
+            // Add photo form handler
+            const photoForm = document.getElementById('photoForm');
+            if (photoForm) {
+                photoForm.addEventListener('submit', function(e) {
+                    // Allow actual form submission to upload photos
+                    const isValid = handleFormSubmit(this, 'photoAlert');
+                    if (!isValid) {
+                        e.preventDefault();
+                        return false;
+                    }
+                    return true;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
