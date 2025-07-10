@@ -18,6 +18,17 @@ A modern, responsive student management system built with Node.js, Express, and 
 - **Responsive Buttons**: Loading states and visual feedback for user actions
 - **Mobile-Optimized Interface**: Enhanced layout for smaller screens
 
+## 📸 Screenshots
+
+![](./public/images/ss%20(8).png)
+![](./public/images/ss%20(7).png)
+![](./public/images/ss%20(6).png)
+![](./public/images/ss%20(5).png)
+![](./public/images/ss%20(4).png)
+![](./public/images/ss%20(3).png)
+![](./public/images/ss%20(2).png)
+![](./public/images/ss%20(1).png)
+
 ## 🛠️ Technology Stack
 
 - **Backend**: Node.js, Express.js
